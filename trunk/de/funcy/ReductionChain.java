@@ -2,10 +2,11 @@ package de.funcy;
 
 import java.util.Collection;
 
-public class Chain<From, To> implements FunctionalAction<Collection<From>, To> {
+public class ReductionChain<From, To> implements
+		FunctionalAction<Collection<From>, To> {
 	private Collection<FunctionalAction<?, ?>> actions;
 
-	public Chain(Collection<FunctionalAction<?, ?>> actions) {
+	public ReductionChain(Collection<FunctionalAction<?, ?>> actions) {
 		this.actions = actions;
 	}
 
