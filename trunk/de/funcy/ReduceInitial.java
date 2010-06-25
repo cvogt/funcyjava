@@ -2,7 +2,7 @@ package de.funcy;
 
 import java.util.Collection;
 
-public abstract class Reduction2<From, To> implements
+public abstract class ReduceInitial<From, To> implements
 		FunctionalAction<Collection<? extends From>, To> {
 	public abstract To function(From a, To b);
 
@@ -17,3 +17,4 @@ public abstract class Reduction2<From, To> implements
 		return this.apply(c, null);
 	}
 }
+	

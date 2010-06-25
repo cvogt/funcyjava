@@ -8,18 +8,18 @@ abstract public class FilterMapReduce<From, To> implements FunctionalAction<Coll
 	protected abstract To reduce(To a, To b);
 	public To apply(Collection<From> from) {
 		final FilterMapReduce<From, To> c = this;
-		return new Reduction<To>() {
-			public To function(To a, To b) {
+		return new Reduce<To>() {
+			public To reduce(To a, To b) {
 				return c.reduce( a, b );
 			}
 		}.apply(
-			new Mapping<From, To>() {
-				public To function(From from) {
+			new Map<From, To>() {
+				protected To map(From from) {
 					return c.map( from );
 				}
 			}.apply(
 					new Filter<From>() {
-						public Boolean function(From from) {
+						protected Boolean filter(From from) {
 							return c.filter( from );
 						}
 					}.apply(from)

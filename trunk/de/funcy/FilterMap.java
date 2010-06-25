@@ -8,13 +8,13 @@ abstract public class FilterMap<From, To> implements FunctionalAction<Collection
 	public Collection<To> apply(Collection<From> from) {
 		final FilterMap<From, To> c = this;
 		
-		return new Mapping<From, To>() {
-			public To function(From from) {
+		return new Map<From, To>() {
+			protected To map(From from) {
 				return c.map( from );
 			}
 		}.apply(
 				new Filter<From>() {
-					public Boolean function(From from) {
+					protected Boolean filter(From from) {
 						return c.filter( from );
 					}
 				}.apply(from)
