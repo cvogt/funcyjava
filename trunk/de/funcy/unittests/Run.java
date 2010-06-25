@@ -66,11 +66,12 @@ public class Run {
 					}
 				})).apply(list);
 
-		System.out.println(result);
+		System.out.println("Chained all above into one ReductionChain: "
+				+ result);
 
 		// FIXME: is it possible to get the following to work?
 		// chaining map (not type safe):
-		MapChain2<String, Integer> c = new MapChain2<String, Integer>(Arrays
+		Collection<Integer> result2 = new MapChain<String, Integer>(Arrays
 				.asList(new Mapping<String, Integer>() {
 					public Integer function(String s) {
 						return Integer.valueOf(s);
@@ -83,15 +84,14 @@ public class Run {
 					public Integer function(Integer i) {
 						return i / divisor;
 					}
-				}));
+				})).apply(list);
 
-		Collection<Integer> result2 = c.apply(list);
-
-		System.out.println(result2);
+		System.out.println("Chained all above except Sum into one MapChain: "
+				+ result2);
 
 		// chaining type error
 		System.out.println("There should be an error:");
-		Integer result3 = new ReductionChain<String, Integer>(Arrays.asList(
+		new Chain<Collection<String>, Integer>(Arrays.asList(
 				new Mapping<String, Integer>() {
 					public Integer function(String s) {
 						return Integer.valueOf(s);
