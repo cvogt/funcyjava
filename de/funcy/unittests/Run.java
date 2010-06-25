@@ -68,6 +68,27 @@ public class Run {
 
 		System.out.println(result);
 
+		// FIXME: is it possible to get the following to work?
+		// chaining map (not type safe):
+		MapChain2<String, Integer> c = new MapChain2<String, Integer>(Arrays
+				.asList(new Mapping<String, Integer>() {
+					public Integer function(String s) {
+						return Integer.valueOf(s);
+					}
+				}, new Filter<Integer>() {
+					public Boolean function(Integer s) {
+						return s % 2 == 0;
+					}
+				}, new Mapping<Integer, Integer>() {
+					public Integer function(Integer i) {
+						return i / divisor;
+					}
+				}));
+
+		Collection<Integer> result2 = c.apply(list);
+
+		System.out.println(result2);
+
 		// chaining type error
 		System.out.println("There should be an error:");
 		Integer result3 = new ReductionChain<String, Integer>(Arrays.asList(
@@ -93,23 +114,5 @@ public class Run {
 					}
 				})).apply(list);
 
-		// FIXME: is it possible to get the following to work?
-		// // chaining map (not type safe):
-		// Integer result2= new MapChain<String, Integer>(Arrays.asList(
-		// new Mapping<String, Integer>() {
-		// public Integer function(String s) {
-		// return Integer.valueOf(s);
-		// }
-		// }, new Filter<Integer>() {
-		// public Boolean function(Integer s) {
-		// return s % 2 == 0;
-		// }
-		// }, new Mapping<Integer, Integer>() {
-		// public Integer function(Integer i) {
-		// return i / divisor;
-		// }
-		// })).apply(list);
-		//
-		// System.out.println(result2);
 	}
 }
