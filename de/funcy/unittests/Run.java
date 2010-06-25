@@ -13,8 +13,8 @@ public class Run {
 		System.out.println("List of Strings:   " + list);
 
 		// map: String to Integer
-		Collection<Integer> list2 = new Mapping<String, Integer>() {
-			public Integer function(String s) {
+		Collection<Integer> list2 = new Map<String, Integer>() {
+			protected Integer map(String s) {
 				return Integer.valueOf(s);
 			}
 		}.apply(list);
@@ -22,7 +22,7 @@ public class Run {
 
 		// filter: even numbers
 		Collection<Integer> list3 = new Filter<Integer>() {
-			public Boolean function(Integer s) {
+			protected Boolean filter(Integer s) {
 				return s % 2 == 0;
 			}
 		}.apply(list2);
@@ -30,16 +30,16 @@ public class Run {
 
 		// map with closure: divide every value by 2
 		final int divisor = 2;
-		Collection<Integer> list4 = new Mapping<Integer, Integer>() {
-			public Integer function(Integer i) {
+		Collection<Integer> list4 = new Map<Integer, Integer>() {
+			protected Integer map(Integer i) {
 				return i / divisor;
 			}
 		}.apply(list3);
 		System.out.println("All divded by two: " + list4);
 
 		// reduce: compute the sum
-		Integer sum = new Reduction<Integer>() {
-			public Integer function(Integer a, Integer b) {
+		Integer sum = new Reduce<Integer>() {
+			public Integer reduce(Integer a, Integer b) {
 				return a + b;
 			}
 		}.apply(list4);
@@ -75,20 +75,20 @@ public class Run {
 
 		// Chained all above into one ReductionChain (not type safe)
 		Integer result = new ReductionChain<String, Integer>(Arrays.asList(
-				new Mapping<String, Integer>() {
-					public Integer function(String s) {
+				new Map<String, Integer>() {
+					protected Integer map(String s) {
 						return Integer.valueOf(s);
 					}
 				}, new Filter<Integer>() {
-					public Boolean function(Integer s) {
+					protected Boolean filter(Integer s) {
 						return s % 2 == 0;
 					}
-				}, new Mapping<Integer, Integer>() {
-					public Integer function(Integer i) {
+				}, new Map<Integer, Integer>() {
+					protected Integer map(Integer i) {
 						return i / divisor;
 					}
-				}, new Reduction<Integer>() {
-					public Integer function(Integer a, Integer b) {
+				}, new Reduce<Integer>() {
+					public Integer reduce(Integer a, Integer b) {
 						return a + b;
 					}
 				})).apply(list);
@@ -98,16 +98,16 @@ public class Run {
 
 		// Chained all above except Sum into one MapChain (not type safe)
 		Collection<Integer> result2 = new MapChain<String, Integer>(Arrays
-				.asList(new Mapping<String, Integer>() {
-					public Integer function(String s) {
+				.asList(new Map<String, Integer>() {
+					protected Integer map(String s) {
 						return Integer.valueOf(s);
 					}
 				}, new Filter<Integer>() {
-					public Boolean function(Integer s) {
+					protected Boolean filter(Integer s) {
 						return s % 2 == 0;
 					}
-				}, new Mapping<Integer, Integer>() {
-					public Integer function(Integer i) {
+				}, new Map<Integer, Integer>() {
+					protected Integer map(Integer i) {
 						return i / divisor;
 					}
 				})).apply(list);
@@ -118,24 +118,24 @@ public class Run {
 		// chaining run-time type error
 		System.out.println("There should be an error:");
 		new Chain<Collection<String>, Integer>(Arrays.asList(
-				new Mapping<String, Integer>() {
-					public Integer function(String s) {
+				new Map<String, Integer>() {
+					protected Integer map(String s) {
 						return Integer.valueOf(s);
 					}
 				}, new Filter<Integer>() {
-					public Boolean function(Integer s) {
+					protected Boolean filter(Integer s) {
 						return s % 2 == 0;
 					}
 				}, new Filter<String>() {
-					public Boolean function(String s) {
+					protected Boolean filter(String s) {
 						return s != "";
 					}
-				}, new Mapping<Integer, Integer>() {
-					public Integer function(Integer i) {
+				}, new Map<Integer, Integer>() {
+					protected Integer map(Integer i) {
 						return i / divisor;
 					}
-				}, new Reduction<Integer>() {
-					public Integer function(Integer a, Integer b) {
+				}, new Reduce<Integer>() {
+					public Integer reduce(Integer a, Integer b) {
 						return a + b;
 					}
 				})).apply(list);

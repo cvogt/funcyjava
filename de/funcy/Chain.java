@@ -15,7 +15,7 @@ public class Chain<From extends Collection, To> implements
 	}
 
 	public To apply(final From from) throws ClassCastException {
-		return new Reduction2<FunctionalAction, To>() {
+		return new ReduceInitial<FunctionalAction, To>() {
 			public To function(FunctionalAction action, To to) {
 				if (to == null) {
 					return (To) action.apply(from);
