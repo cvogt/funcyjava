@@ -45,8 +45,35 @@ public class Run {
 		}.apply(list4);
 		System.out.println("Sum: " + sum);
 
-		// chaining map and filter with final reduce (not type safe): do all at
-		// once
+		// filter and map in one, filter even and divide by 2
+		Collection<Integer> mapFilter = new FilterMap<Integer, Integer>() {
+			protected Boolean filter(Integer s) {
+				return s % 2 == 0;
+			}
+
+			protected Integer map(Integer i) {
+				return i / divisor;
+			}
+		}.apply(list2);
+		System.out.println("MapFilter: " + mapFilter);
+
+		// filter, map and reduce at once, filter even, divide by 2, sum up
+		Integer mapFilterReduce = new FilterMapReduce<Integer, Integer>() {
+			protected Boolean filter(Integer s) {
+				return s % 2 == 0;
+			}
+
+			protected Integer map(Integer i) {
+				return i / divisor;
+			}
+
+			protected Integer reduce(Integer a, Integer b) {
+				return a + b;
+			}
+		}.apply(list2);
+		System.out.println("MapFilterReduce: " + mapFilterReduce);
+
+		// Chained all above into one ReductionChain (not type safe)
 		Integer result = new ReductionChain<String, Integer>(Arrays.asList(
 				new Mapping<String, Integer>() {
 					public Integer function(String s) {
@@ -66,11 +93,10 @@ public class Run {
 					}
 				})).apply(list);
 
-		System.out.println("Chained all above into one ReductionChain: "
+		System.out.println("ReductionChain: "
 				+ result);
 
-		// FIXME: is it possible to get the following to work?
-		// chaining map (not type safe):
+		// Chained all above except Sum into one MapChain (not type safe)
 		Collection<Integer> result2 = new MapChain<String, Integer>(Arrays
 				.asList(new Mapping<String, Integer>() {
 					public Integer function(String s) {
@@ -86,10 +112,10 @@ public class Run {
 					}
 				})).apply(list);
 
-		System.out.println("Chained all above except Sum into one MapChain: "
+		System.out.println("MapChain: "
 				+ result2);
 
-		// chaining type error
+		// chaining run-time type error
 		System.out.println("There should be an error:");
 		new Chain<Collection<String>, Integer>(Arrays.asList(
 				new Mapping<String, Integer>() {

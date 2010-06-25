@@ -1,6 +1,5 @@
 package de.funcy;
 
-public interface FunctionalAction<From, To> { // FIXME: replace From by
-	// Collection<From>
-	public To apply(From a);
+public interface FunctionalAction<From, To> {
+	public To apply(From from);
 }
