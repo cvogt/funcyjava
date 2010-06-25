@@ -4,11 +4,11 @@ import java.util.Collection;
 
 public abstract class ReduceInitial<From, To> implements
 		FunctionalAction<Collection<? extends From>, To> {
-	public abstract To function(From a, To b);
+	public abstract To reduce(From a, To b);
 
 	public To apply(Collection<? extends From> c, To initial) {
 		for (From next : c) {
-			initial = this.function(next, initial);
+			initial = this.reduce(next, initial);
 		}
 		return initial;
 	}
