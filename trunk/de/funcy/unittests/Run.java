@@ -1,6 +1,7 @@
 package de.funcy.unittests;
 
 import de.funcy.*;
+import de.funcy.rtt.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +46,14 @@ public class Run {
 		}.apply(list4);
 		System.out.println("Sum: " + sum);
 
+		// reduce with initial value: concat all ints as strings
+		String concat = new ReduceInitial<Integer, String>() {
+			public String reduce(Integer a, String b) {
+				return b + a;
+			}
+		}.apply(list4, "");
+		System.out.println("Concat: " + concat);
+
 		// filter and map in one, filter even and divide by 2
 		Collection<Integer> mapFilter = new FilterMap<Integer, Integer>() {
 			protected Boolean filter(Integer s) {
@@ -58,7 +67,24 @@ public class Run {
 		System.out.println("MapFilter: " + mapFilter);
 
 		// filter, map and reduce at once, filter even, divide by 2, sum up
-		Integer mapFilterReduce = new FilterMapReduce<Integer, Integer>() {
+		Integer mapFilterReduce = new FilterMapReduce<String, Integer>() {
+			protected Boolean filter(String s) {
+				return Integer.valueOf(s) % 2 == 0;
+			}
+
+			protected Integer map(String i) {
+				return Integer.valueOf(i) / divisor;
+			}
+
+			protected Integer reduce(Integer a, Integer b) {
+				return a + b;
+			}
+		}.apply(list);
+		System.out.println("MapFilterReduce: " + mapFilterReduce);
+
+		// filter, map and reduce with initial at once, filter even, divide by
+		// 2, concat all
+		String mapFilterReduceInitial = new FilterMapReduceInitial<Integer, Integer, String>() {
 			protected Boolean filter(Integer s) {
 				return s % 2 == 0;
 			}
@@ -67,11 +93,11 @@ public class Run {
 				return i / divisor;
 			}
 
-			protected Integer reduce(Integer a, Integer b) {
-				return a + b;
+			public String reduce(Integer a, String b) {
+				return b + a;
 			}
-		}.apply(list2);
-		System.out.println("MapFilterReduce: " + mapFilterReduce);
+		}.apply(list2, "");
+		System.out.println("MapFilterReduceInitial: " + mapFilterReduceInitial);
 
 		// Chained all above into one ReductionChain (not type safe)
 		Integer result = new ReductionChain<String, Integer>(Arrays.asList(
@@ -93,8 +119,7 @@ public class Run {
 					}
 				})).apply(list);
 
-		System.out.println("ReductionChain: "
-				+ result);
+		System.out.println("ReductionChain: " + result);
 
 		// Chained all above except Sum into one MapChain (not type safe)
 		Collection<Integer> result2 = new MapChain<String, Integer>(Arrays
@@ -112,8 +137,7 @@ public class Run {
 					}
 				})).apply(list);
 
-		System.out.println("MapChain: "
-				+ result2);
+		System.out.println("MapChain: " + result2);
 
 		// chaining run-time type error
 		System.out.println("There should be an error:");

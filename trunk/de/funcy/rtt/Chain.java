@@ -1,6 +1,9 @@
-package de.funcy;
+package de.funcy.rtt;
 
 import java.util.Collection;
+
+import de.funcy.FunctionalAction;
+import de.funcy.ReduceInitial;
 
 public class Chain<From extends Collection, To> implements
 		FunctionalAction<From, To> {
@@ -16,7 +19,7 @@ public class Chain<From extends Collection, To> implements
 
 	public To apply(final From from) throws ClassCastException {
 		return new ReduceInitial<FunctionalAction, To>() {
-			public To function(FunctionalAction action, To to) {
+			public To reduce(FunctionalAction action, To to) {
 				if (to == null) {
 					return (To) action.apply(from);
 				}
